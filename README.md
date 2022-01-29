@@ -6,6 +6,8 @@ Warlord mod is a compilation of improvements on M&B II Bannerlord mechanics.
 
 ---
 
+GitHub project: https://github.com/Valthaer/B3-Warlord
+
 Acknowledgements
 Based on the work from:
 
