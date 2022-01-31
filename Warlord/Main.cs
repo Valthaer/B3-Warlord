@@ -16,6 +16,23 @@ using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 
+using MCM.Abstractions.Attributes;
+using MCM.Abstractions.Attributes.v1;
+using MCM.Abstractions.Settings.Base.Global;
+
+using TaleWorlds.Core;
+using TaleWorlds.Library;
+using TaleWorlds.SaveSystem;
+using TaleWorlds.Localization;
+using TaleWorlds.ObjectSystem;
+using TaleWorlds.MountAndBlade;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.Overlay;
+using TaleWorlds.CampaignSystem.GameMenus;
+using TaleWorlds.CampaignSystem.SandBox.CampaignBehaviors;
+using TaleWorlds.CampaignSystem.SandBox.GameComponents.Party;
+
 namespace Warlord
 {
     public class Main : MBSubModuleBase
@@ -36,7 +53,7 @@ namespace Warlord
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
-            InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=misc_ig_onmapload}Loaded Warlord", null).ToString(), Color.FromUint(ModuleColors.green)));
+            InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=misc_ig_onmapload}Loaded Warlord 0.0.3", null).ToString(), Color.FromUint(ModuleColors.green)));
             //this.ThrowWarningIfGameErrorDoesntMatchModVersion();
         }
     }

@@ -19,8 +19,9 @@ namespace Warlord
 			bool isLordParty = __instance.IsLordParty;
 			if (isLordParty)
 			{
+				MessageManager.DisplayDebugMessage($"Lord Army going to respawn with troop number = {troopNumberLimit}");
 				troopNumberLimit = 1;
-				InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=misc_ig_onmapload}Lord Army respawned with troop number = " + troopNumberLimit, null).ToString(), Color.FromUint(ModuleColors.red)));
+				MessageManager.DisplayDebugMessage($"Lord Army respawned with troop number = {troopNumberLimit}");				
 			}
 		}
 	}

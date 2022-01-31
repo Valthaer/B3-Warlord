@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+	<Name value = "Warlord"/>
+	<Id value = "Warlord"/>
+	<Version value = "v0.0.2"/>
+	<SingleplayerModule value="true"/>
+	<MultiplayerModule value="false"/>
+	<DependedModules>
+        <DependedModule Id="Native" DependentVersion="e1.7.1"/>
+        <DependedModule Id="SandBoxCore" DependentVersion="e1.7.1"/>
+        <DependedModule Id="Sandbox" DependentVersion="e1.7.1"/>
+        <DependedModule Id="CustomBattle" DependentVersion="e1.7.1"/>
+        <DependedModule Id="StoryMode" DependentVersion="e1.7.1"/>
+		<DependedModule Id="Bannerlord.Harmony" DependentVersion="v2.2.0" />
+		<DependedModule Id="Bannerlord.MBOptionScreen" />
+	</DependedModules>
+	<SubModules>
+	   <SubModule>
+             <Name value="Warlord"/>
+             <DLLName value="Warlord.dll"/>
+             <SubModuleClassType value="Warlord.Main"/>
+             <Tags>
+                 <Tag key="DedicatedServerType" value="none" />
+                 <Tag key="IsNoRenderModeElement" value="false" />
+             </Tags>
+         </SubModule>
+	   </SubModules>
+   <Xmls>
+  </Xmls>
+</Module>
