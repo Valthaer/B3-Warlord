@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.GameMenus;
@@ -1222,7 +1221,9 @@ namespace Warlord
             PartyTemplateObject defaultPartyTemplate = origin.Culture.CaravanPartyTemplate;//.DefaultPartyTemplate;
             MobileParty mobileParty = MBObjectManager.Instance.CreateObject<MobileParty>(origin.StringId + '_' + (meesajarjarbinks ? leaderParty.StringId : destination.StringId) + "_SupplyLine");
             mobileParty.PartyComponent = (CaravanPartyComponent)typeof(CaravanPartyComponent).GetConstructor(nonPublicInstanceFlags, null, new Type[] { typeof(Settlement), typeof(Hero) }, null).Invoke(new object[] { origin.Settlement, origin.Owner.Owner });
-            mobileParty.InitializeMobileParty(defaultPartyTemplate, origin.Settlement.GatePosition, 0.0f, troopNumberLimit: 0);
+
+            mobileParty.InitializeMobilePartyAtPosition(defaultPartyTemplate, origin.Settlement.GatePosition);
+                        
             typeof(PartyComponent).GetMethod("SetMobilePartyInternal", nonPublicInstanceFlags).Invoke(mobileParty.PartyComponent, new object[] { mobileParty });
             mobileParty.Party.Visuals.SetMapIconAsDirty();
 
@@ -1312,7 +1313,11 @@ namespace Warlord
                 return true;
             });
 
-            partyScreenLogic.SetDoneConditionHandler((leftMemberRoster, leftPrisonRoster, rightMemberRoster, rightPrisonRoster, leftLimitNum, rightLimitNum) => new Tuple<bool, TextObject>(true, new TextObject("")));
+            partyScreenLogic.DoneLogic
+
+            (leftMemberRoster, leftPrisonRoster, rightMemberRoster, rightPrisonRoster, leftLimitNum, rightLimitNum) => new Tuple<bool, TextObject>(true, new TextObject(""));
+
+            partyScreenLogic.SetDoneConditionHandler();
             partyScreenLogic.SetTroopTransferableDelegate(new PartyScreenLogic.IsTroopTransferableDelegate(PartyScreenManager.TroopTransferableDelegate));
             PartyScreenManager.Instance.GetType().GetField("_partyScreenLogic", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(PartyScreenManager.Instance, partyScreenLogic);
             PartyScreenManager.Instance.GetType().GetField("_currentMode", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(PartyScreenManager.Instance, PartyScreenMode.TroopsManage);
