@@ -1274,51 +1274,55 @@ namespace Warlord
                 listOfTroopsWithInitialExp.Add(garrisonParty.MemberRoster.GetElementCopyAtIndex(index), garrisonParty.MemberRoster.GetElementXp(index));
                 garrisonParty.MemberRoster.SetElementXp(index, 0);
             }
-            partyScreenLogic.Initialize(supplyParty.Party, garrisonParty, supplyParty.Name, (leftMemberRoster, leftPrisonRoster, rightMemberRoster, rightPrisonRoster, e, f, isForced, leftParties, rigthParties) =>
+
+            PartyScreenLogicInitializationData partyInitData = new PartyScreenLogicInitializationData();
+            partyInitData.LeftOwnerParty = supplyParty.Party;
+            partyInitData.LeftPartyName = supplyParty.Name;
+            partyInitData.LeftMemberRoster = supplyParty.MemberRoster;            
+            partyInitData.MemberTransferState = PartyScreenLogic.TransferState.Transferable;
+            partyInitData.RightOwnerParty = garrisonParty.Party;
+            partyInitData.RightPartyName = garrisonParty.Name;
+            partyInitData.RightMemberRoster = garrisonParty.MemberRoster;
+
+            
+            if (listOfTroopsWithInitialExp.Count > 0)
             {
-                if (listOfTroopsWithInitialExp.Count > 0)
+                foreach (TroopRosterElement key in garrisonParty.MemberRoster.GetTroopRoster())
                 {
-                    foreach (TroopRosterElement key in garrisonParty.MemberRoster.GetTroopRoster())
+                    int indexOfTroop = garrisonParty.MemberRoster.FindIndexOfTroop(key.Character);
+                    if (indexOfTroop > 0)
                     {
-                        int indexOfTroop = garrisonParty.MemberRoster.FindIndexOfTroop(key.Character);
-                        if (indexOfTroop > 0)
-                        {
-                            int number = listOfTroopsWithInitialExp[key];
-                            garrisonParty.MemberRoster.SetElementXp(indexOfTroop, number);
-                        }
+                        int number = listOfTroopsWithInitialExp[key];
+                        garrisonParty.MemberRoster.SetElementXp(indexOfTroop, number);
                     }
                 }
+            }
+            FinalizeShipment(supplyParty, garrisonParty);
+            
+            partyScreenLogic.Initialize(partyInitData);
+                       
+            //TODO
+            //partyScreenLogic.SetCancelActivateHandler(() =>
+            //{
+            //    if (listOfTroopsWithInitialExp.Count > 0)
+            //    {
+            //        foreach (TroopRosterElement key in garrisonParty.MemberRoster.GetTroopRoster())
+            //        {
+            //            int indexOfTroop = garrisonParty.MemberRoster.FindIndexOfTroop(key.Character);
+            //            if (indexOfTroop >= 0)
+            //            {
+            //                int number = listOfTroopsWithInitialExp[key];
+            //                garrisonParty.MemberRoster.SetElementXp(indexOfTroop, number);
+            //            }
+            //        }
+            //    }
 
-                FinalizeShipment(supplyParty, garrisonParty);
-                return true;
-            });
-            partyScreenLogic.InitializeTrade(PartyScreenLogic.TransferState.Transferable, PartyScreenLogic.TransferState.NotTransferable, PartyScreenLogic.TransferState.NotTransferable);
+            //    FinalizeShipment(supplyParty, garrisonParty);
+            //    return true;
+            //});
 
-            partyScreenLogic.SetCancelActivateHandler(() =>
-            {
-                if (listOfTroopsWithInitialExp.Count > 0)
-                {
-                    foreach (TroopRosterElement key in garrisonParty.MemberRoster.GetTroopRoster())
-                    {
-                        int indexOfTroop = garrisonParty.MemberRoster.FindIndexOfTroop(key.Character);
-                        if (indexOfTroop >= 0)
-                        {
-                            int number = listOfTroopsWithInitialExp[key];
-                            garrisonParty.MemberRoster.SetElementXp(indexOfTroop, number);
-                        }
-                    }
-                }
-
-                FinalizeShipment(supplyParty, garrisonParty);
-                return true;
-            });
-
-            partyScreenLogic.DoneLogic
-
-            (leftMemberRoster, leftPrisonRoster, rightMemberRoster, rightPrisonRoster, leftLimitNum, rightLimitNum) => new Tuple<bool, TextObject>(true, new TextObject(""));
-
-            partyScreenLogic.SetDoneConditionHandler();
-            partyScreenLogic.SetTroopTransferableDelegate(new PartyScreenLogic.IsTroopTransferableDelegate(PartyScreenManager.TroopTransferableDelegate));
+            //partyScreenLogic.SetDoneConditionHandler((leftMemberRoster, leftPrisonRoster, rightMemberRoster, rightPrisonRoster, leftLimitNum, rightLimitNum) => new Tuple<bool, TextObject>(true, new TextObject("")););
+            //partyScreenLogic.SetTroopTransferableDelegate(new PartyScreenLogic.IsTroopTransferableDelegate(PartyScreenManager.TroopTransferableDelegate));
             PartyScreenManager.Instance.GetType().GetField("_partyScreenLogic", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(PartyScreenManager.Instance, partyScreenLogic);
             PartyScreenManager.Instance.GetType().GetField("_currentMode", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(PartyScreenManager.Instance, PartyScreenMode.TroopsManage);
             PartyState state = Game.Current.GameStateManager.CreateState<PartyState>();
