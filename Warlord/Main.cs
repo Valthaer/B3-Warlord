@@ -51,7 +51,7 @@ namespace Warlord
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
-            MessageManager.DisplayMessage("Loaded Warlord 0.0.4",Colors.Green);
+            MessageManager.DisplayMessage("Loaded Warlord 0.0.5",Colors.Green);
             //this.ThrowWarningIfGameErrorDoesntMatchModVersion();
         }
     }
