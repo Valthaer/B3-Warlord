@@ -15,11 +15,9 @@ using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
-
 using MCM.Abstractions.Attributes;
 using MCM.Abstractions.Attributes.v1;
 using MCM.Abstractions.Settings.Base.Global;
-
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.SaveSystem;
@@ -53,7 +51,7 @@ namespace Warlord
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
-            InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=misc_ig_onmapload}Loaded Warlord 0.0.3", null).ToString(), Color.FromUint(ModuleColors.green)));
+            MessageManager.DisplayMessage("Loaded Warlord 0.0.4",Colors.Green);
             //this.ThrowWarningIfGameErrorDoesntMatchModVersion();
         }
     }

@@ -1,12 +1,30 @@
-﻿using System;
+﻿using HarmonyLib;
+using MCM.Abstractions.Attributes;
+using MCM.Abstractions.Attributes.v1;
+using MCM.Abstractions.Settings.Base.Global;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.GameMenus;
+using TaleWorlds.CampaignSystem.Overlay;
+using TaleWorlds.CampaignSystem.SandBox.CampaignBehaviors;
+using TaleWorlds.CampaignSystem.SandBox.GameComponents.Party;
+using TaleWorlds.Core;
+using TaleWorlds.Library;
+using TaleWorlds.Localization;
+using TaleWorlds.MountAndBlade;
+using TaleWorlds.ObjectSystem;
+using TaleWorlds.SaveSystem;
 
 namespace Warlord
 {
-    public class SupplyLines
+    
+    public class SupplyLines : MBSubModuleBase
     {
 
         protected override void OnSubModuleLoad()
@@ -123,7 +141,7 @@ namespace Warlord
                         if (!m.ItemRoster.Any())
                         {
 #if DEBUG
-                            MessageHelper.DisplayDebugMessage(m.ToString() + " had no items on MapEventEnded! Crash averted!", Colors.Green);
+                            MessageManager.DisplayDebugMessage(m.ToString() + " had no items on MapEventEnded! Crash averted!");
 #endif
                             m.ItemRoster.AddToCounts(DefaultItems.Grain, 10);
                         }
@@ -317,7 +335,7 @@ namespace Warlord
                                     }
 
 #if DEBUG
-                                    //MessageHelper.DisplayDebugMessage("Reset troop roster for " + m.Name.ToString() + ".");
+                                    //MessageManager.DisplayDebugMessage("Reset troop roster for " + m.Name.ToString() + ".");
 #endif
                                 }
                             }
@@ -419,7 +437,7 @@ namespace Warlord
                     else
                     {
                         TextObject text = new TextObject("{=SL_MESSAGE_1}Supply Lines Warning: Lists required resyncing! This might happen after updates.");
-                        MessageHelper.DisplayMessage(text, Colors.Yellow);
+                        MessageManager.DisplayMessage(text, Colors.Yellow);
                         ClearAllLists();
                         FindLostParties();
                     }
@@ -523,7 +541,7 @@ namespace Warlord
                                 text.SetTextVariable("TOWN_NAME", nTown.Name);
                                 text.SetTextVariable("TOWN_FOOD_LEFT", nTown.FoodStocks.ToString("n0"));
                                 text.SetTextVariable("TOWN_FOOD_CHANGE", nTown.FoodChange.ToString("n0"));
-                                MessageHelper.DisplayMessage(text);
+                                MessageManager.DisplayMessage(text);
                             }
 
                             m.SetMoveGoToSettlement(nTown.Settlement);
@@ -561,7 +579,7 @@ namespace Warlord
                             TextObject text = new TextObject("{=SL_MESSAGE_2}{SIEGE_PARTY} needs food but no fief was able to help. It's up to you now! (Days Left Until No Food: {DAYS_FOOD_LEFT})");
                             text.SetTextVariable("SIEGE_PARTY", leaderParty.Name);
                             text.SetTextVariable("DAYS_FOOD_LEFT", leaderParty.GetNumDaysForFoodToLast());
-                            MessageHelper.DisplayMessage(text, Colors.Yellow);
+                            MessageManager.DisplayMessage(text, Colors.Yellow);
                         }
 
                         continue;
@@ -575,7 +593,7 @@ namespace Warlord
                         text.SetTextVariable("FOOD_CHANGE", closestTown.FoodChange.ToString("n0"));
                         text.SetTextVariable("SIEGE_PARTY", leaderParty.Name);
                         text.SetTextVariable("DAYS_FOOD_LEFT", leaderParty.GetNumDaysForFoodToLast());
-                        MessageHelper.DisplayMessage(text);
+                        MessageManager.DisplayMessage(text);
                     }
 
                     MobileParty supplyParty = InitializeAISupplyParty(closestTown, null, leaderParty, isPlayerClan);
@@ -602,7 +620,7 @@ namespace Warlord
                             text.SetTextVariable("TOWN_NAME", nTown.Name);
                             text.SetTextVariable("FOOD_STOCKS", nTown.FoodStocks.ToString("n0"));
                             text.SetTextVariable("FOOD_CHANGE", nTown.FoodChange.ToString("n0"));
-                            MessageHelper.DisplayMessage(text, Colors.Yellow);
+                            MessageManager.DisplayMessage(text, Colors.Yellow);
                         }
 
                         continue;
@@ -620,7 +638,7 @@ namespace Warlord
                         text.SetTextVariable("TOWN_NAME", nTown.Name);
                         text.SetTextVariable("TOWN_FOOD_LEFT", nTown.FoodStocks.ToString("n0"));
                         text.SetTextVariable("TOWN_FOOD_CHANGE", nTown.FoodChange.ToString("n0"));
-                        MessageHelper.DisplayMessage(text);
+                        MessageManager.DisplayMessage(text);
                     }
 
                     m.SetMoveGoToSettlement(nTown.Settlement);
@@ -717,7 +735,7 @@ namespace Warlord
                 text.SetTextVariable("CLOSEST_TOWN", closestTown.Name);
                 text.SetTextVariable("TROOP_COUNT", m.Party.NumberOfAllMembers);
                 text.SetTextVariable("PARTY_SPEED", m.ComputeSpeed().ToString("n1"));
-                MessageHelper.DisplayMessage(text);
+                MessageManager.DisplayMessage(text);
             }
 
             supplyParties.Add(m);
@@ -802,7 +820,7 @@ namespace Warlord
                     TextObject text = new TextObject("{=SL_MESSAGE_7}{PARTY_ID} put back on course to {DEST_NAME}.");
                     text.SetTextVariable("PARTY_ID", partyID);
                     text.SetTextVariable("DEST_NAME", goingHome ? origin?.Name?.ToString() ?? new TextObject("{=SL_NULL_ORIGIN}NULL ORIGIN").ToString() : dest?.Name?.ToString() ?? destParty?.Name?.ToString() ?? new TextObject("{=SL_NULL_DEST}NULL DESTINATION").ToString());
-                    MessageHelper.DisplayMessage(text);
+                    MessageManager.DisplayMessage(text);
                 }
             }
         }
@@ -829,7 +847,7 @@ namespace Warlord
             if (!ListsInSync())
             {
                 TextObject text = new TextObject("{=SL_MESSAGE_1}Supply Lines Warning: Lists required resyncing! This might happen after updates.");
-                MessageHelper.DisplayMessage(text, Colors.Yellow);
+                MessageManager.DisplayMessage(text, Colors.Yellow);
                 ClearAllLists();
                 FindLostParties();
             }
@@ -875,7 +893,7 @@ namespace Warlord
                         TextObject text = new TextObject("{=SL_MESSAGE_8}{CURRENT_TOWN_NAME} is sending support to {TOWN_NAME}.");
                         text.SetTextVariable("CURRENT_TOWN_NAME", s.Name);
                         text.SetTextVariable("TOWN_NAME", townName);
-                        MessageHelper.DisplayMessage(text, Colors.Cyan);
+                        MessageManager.DisplayMessage(text, Colors.Cyan);
                         Town origin = s.Town;
                         MobileParty m = CreateParty(origin, t);
                         SelectTroops(m, origin.GarrisonParty);
@@ -915,7 +933,7 @@ namespace Warlord
                         TextObject text = new TextObject("{=SL_MESSAGE_9}{CURRENT_TOWN_NAME} is requesting support from {TOWN_NAME}.");
                         text.SetTextVariable("CURRENT_TOWN_NAME", s.Name);
                         text.SetTextVariable("TOWN_NAME", townName);
-                        MessageHelper.DisplayMessage(text, Colors.Cyan);
+                        MessageManager.DisplayMessage(text, Colors.Cyan);
                         MobileParty m = CreateParty(t, dest);
                         SelectTroops(m, t.GarrisonParty);
                         if (m.IsActive)
@@ -961,12 +979,12 @@ namespace Warlord
                         TextObject text = new TextObject("{=SL_MESSAGE_9}{CURRENT_TOWN_NAME} is requesting support from {TOWN_NAME}.");
                         text.SetTextVariable("CURRENT_TOWN_NAME", s.Name);
                         text.SetTextVariable("TOWN_NAME", townName);
-                        MessageHelper.DisplayMessage(text, Colors.Cyan);
+                        MessageManager.DisplayMessage(text, Colors.Cyan);
 
                         int cost = (int)purchaseSettlement.Position2D.Distance(s.Position2D) * 20 + (MySettings.Instance?.SUPPLY_AMOUNT ?? 50) * t.MarketData.GetPrice(DefaultItems.Grain, isSelling: true);
                         text = new TextObject("{=SL_MESSAGE_19}You were charged {AMOUNT} gold for this delivery.");
                         text.SetTextVariable("AMOUNT", cost);
-                        MessageHelper.DisplayMessage(text, Colors.Cyan);
+                        MessageManager.DisplayMessage(text, Colors.Cyan);
 
                         t.OwnerClan.Leader.ChangeHeroGold(cost);
                         Hero.MainHero.ChangeHeroGold(-cost);
@@ -1006,7 +1024,7 @@ namespace Warlord
                     MobileParty supplyParty = InitializeAISupplyParty(Hero.OneToOneConversationHero.CurrentSettlement.Town, null, MobileParty.MainParty, true);
                     if (supplyParty == null)
                     {
-                        MessageHelper.DisplayMessage(new TextObject("{=SL_MESSAGE_14}Supply Lines Error: Supply Party Not Created"));
+                        MessageManager.DisplayMessage(new TextObject("{=SL_MESSAGE_14}Supply Lines Error: Supply Party Not Created"));
                         return;
                     }
 
@@ -1097,7 +1115,7 @@ namespace Warlord
             Settlement.CurrentSettlement.Town.FoodStocks += donateAmount;
             TextObject text = new TextObject("{=SL_MESSAGE_20}You donate {DONATION_AMOUNT} food items to the settlement food stocks.");
             text.SetTextVariable("DONATION_AMOUNT", donateAmount);
-            MessageHelper.DisplayMessage(text);
+            MessageManager.DisplayMessage(text);
         }
 
         private bool AutoOnCondition(MenuCallbackArgs args)
@@ -1109,7 +1127,7 @@ namespace Warlord
         private void AutoOnConsequence(MenuCallbackArgs args)
         {
             enableAIForPlayer = false;
-            MessageHelper.DisplayMessage(new TextObject("{=SL_MESSAGE_10}Player supply lines will now require player to manually send and request shipments."));
+            MessageManager.DisplayMessage(new TextObject("{=SL_MESSAGE_10}Player supply lines will now require player to manually send and request shipments."));
             GameMenu.SwitchToMenu("supply_lines_menu");
         }
 
@@ -1122,7 +1140,7 @@ namespace Warlord
         private void ManualOnConsequence(MenuCallbackArgs args)
         {
             enableAIForPlayer = true;
-            MessageHelper.DisplayMessage(new TextObject("{=SL_MESSAGE_11}Player supply lines will now be handled by the AI. Parties will always return home after making the delivery. The AI will prioritise selecting mounted troops when it forms supply parties. You should keep at least 30 cavalry in your garrisons that maintain food surpluses so the AI can form the quickest and most reliable party."));
+            MessageManager.DisplayMessage(new TextObject("{=SL_MESSAGE_11}Player supply lines will now be handled by the AI. Parties will always return home after making the delivery. The AI will prioritise selecting mounted troops when it forms supply parties. You should keep at least 30 cavalry in your garrisons that maintain food surpluses so the AI can form the quickest and most reliable party."));
             GameMenu.SwitchToMenu("supply_lines_menu");
         }
 
@@ -1136,7 +1154,7 @@ namespace Warlord
         private void ReturnOnConsequence(MenuCallbackArgs args)
         {
             returnAfterDelivery = false;
-            MessageHelper.DisplayMessage(new TextObject("{=SL_MESSAGE_12}Supply transfer parties will stay at their destination after delivery."));
+            MessageManager.DisplayMessage(new TextObject("{=SL_MESSAGE_12}Supply transfer parties will stay at their destination after delivery."));
             GameMenu.SwitchToMenu("supply_lines_menu");
         }
 
@@ -1150,7 +1168,7 @@ namespace Warlord
         private void StayOnConsequence(MenuCallbackArgs args)
         {
             returnAfterDelivery = true;
-            MessageHelper.DisplayMessage(new TextObject("{=SL_MESSAGE_13}Supply transfer parties will return home after delivery."));
+            MessageManager.DisplayMessage(new TextObject("{=SL_MESSAGE_13}Supply transfer parties will return home after delivery."));
             GameMenu.SwitchToMenu("supply_lines_menu");
         }
 
@@ -1449,7 +1467,6 @@ namespace Warlord
 
     public class MySaveDefiner : SaveableTypeDefiner
     {
-        //EE913847
         public MySaveDefiner() : base((0x913847 << 8) | 123)
         {
 
@@ -1460,5 +1477,5 @@ namespace Warlord
             ConstructContainerDefinition(typeof(List<TroopRosterElement[]>));
         }
     }
-
+    
 }

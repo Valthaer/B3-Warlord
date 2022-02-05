@@ -40,12 +40,9 @@ namespace Warlord
         {
             InformationManager.AddQuickInformation(textObj, announcerCharacter: character);
         }
-
-#if DEBUG
         internal static void DisplayDebugMessage(string msg)
         {            
             InformationManager.DisplayMessage(new InformationMessage("[Warlord DEBUG] " + msg, Colors.Red));
         }
-#endif
     }
 }
