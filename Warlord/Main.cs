@@ -30,6 +30,7 @@ using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.SandBox.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Party;
+using System.Reflection;
 
 namespace Warlord
 {
@@ -40,7 +41,19 @@ namespace Warlord
             base.OnSubModuleLoad();
             try
             {
-                new Harmony("Warlord").PatchAll();
+                Harmony harmony = new Harmony("Warlord");
+                
+                //Method retriever
+                //var method1 = typeof(MobileParty).GetMethod("FillPartyStacks", BindingFlags.NonPublic | BindingFlags.Instance);
+                //var method2 = typeof(SpawnLordParty).GetMethod(nameof(SpawnLordParty.FillPartyStacksPrefix));
+
+                harmony.Patch(typeof(MobileParty).GetMethod("FillPartyStacks", BindingFlags.NonPublic | BindingFlags.Instance),
+                    new HarmonyMethod(typeof(SpawnLordParty).GetMethod(nameof(SpawnLordParty.FillPartyStacksPrefix))));
+                harmony.Patch(typeof(HeroSpawnCampaignBehavior).GetMethod("CalculateScoreToCreateParty", BindingFlags.NonPublic | BindingFlags.Instance),
+                    new HarmonyMethod(typeof(SpawnLordParty).GetMethod(nameof(SpawnLordParty.CalculateScoreToCreatePartyPrefix))));
+                harmony.Patch(typeof(HeroSpawnCampaignBehavior).GetMethod("GetHeroPartyCommandScore", BindingFlags.NonPublic | BindingFlags.Instance),
+                    new HarmonyMethod(typeof(SpawnLordParty).GetMethod(nameof(SpawnLordParty.GetHeroPartyCommandScorePrefix))));
+                
 
             }
             catch (Exception e)
@@ -51,7 +64,7 @@ namespace Warlord
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
-            MessageManager.DisplayMessage("Loaded Warlord 0.0.5",Colors.Green);
+            MessageManager.DisplayMessage("Loaded Warlord 0.1.3",Colors.Green);
             //this.ThrowWarningIfGameErrorDoesntMatchModVersion();
         }
     }
