@@ -20,25 +20,25 @@ namespace Warlord
 			if (isLordParty && WarlordModuleSettings.Instance.LordPartySpawnSizeReducedEnabled)
 			{
 #if DEBUG
-				//MessageManager.DisplayDebugMessage($"Lord {__instance.LeaderHero.Name} Army of the {__instance.LeaderHero.Clan.Name} going to respawn with troop number = {troopNumberLimit}");
+				MessageManager.DisplayDebugMessage($"Lord {__instance.LeaderHero.Name} Army of the {__instance.LeaderHero.Clan.Name} going to respawn with troop number = {troopNumberLimit}");
 #endif
 				troopNumberLimit = 1;
 #if DEBUG
-				//MessageManager.DisplayDebugMessage($"Lord {__instance.LeaderHero.Name} Army of the {__instance.LeaderHero.Clan.Name} respawned with troop number = {troopNumberLimit}");				
+				MessageManager.DisplayDebugMessage($"Lord {__instance.LeaderHero.Name} Army of the {__instance.LeaderHero.Clan.Name} respawned with troop number = {troopNumberLimit}");				
 #endif
 			}
 		}
 
 		public static bool CalculateScoreToCreatePartyPrefix(ref float __result, Clan clan) // See also ConsiderSpawningLordParties
 		{
-            if (!WarlordModuleSettings.Instance.LordPartySpawnSizeReducedEnabled)
+            if (!WarlordModuleSettings.Instance.LordPartySpawnDelayEnabled)
             {
 				return false;
             }
 
 			float clanScoreToCreateParty = (float)(clan.Fiefs.Count * 100 - clan.WarPartyComponents.Count<WarPartyComponent>() * 100) + (float)clan.Gold * 0.01f + (clan.IsMinorFaction ? 200f : 0f) + (clan.WarPartyComponents.Any<WarPartyComponent>() ? 0f : 200f);
 #if DEBUG
-			//MessageManager.DisplayDebugMessage($"Clan {clan.Name} score to create party: {clanScoreToCreateParty}");
+			MessageManager.DisplayDebugMessage($"Clan {clan.Name} score to create party: {clanScoreToCreateParty}");
 #endif
 			if (clanScoreToCreateParty > 100)
             {

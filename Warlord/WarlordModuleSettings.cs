@@ -38,11 +38,11 @@ namespace Warlord
 		}
 
 		[XmlElement]
-		[SettingProperty("Lord Party Spawn Delay Enabled",0, 1, "If Enabled, Lord Parties time to spawn after being destroyed will be larger.")]
+		[SettingProperty("Lord Party Spawn Delay Enabled", "If Enabled, Lord Parties time to spawn after being destroyed will be larger.")]
 		public bool LordPartySpawnDelayEnabled { get; set; } = true;
 
 		[XmlElement]
-		[SettingProperty("Lord Party Spawn Size Reduced Enabled", 0, 1, "If Enabled, Lord Parties will spawn only with the Lords after being destroyed.")]
+		[SettingProperty("Lord Party Spawn Size Reduced Enabled", "If Enabled, Lord Parties will spawn only with the Lords after being destroyed.")]
 		public bool LordPartySpawnSizeReducedEnabled { get; set; } = true;
 
 		[XmlElement]
