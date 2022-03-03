@@ -31,6 +31,7 @@ using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.SandBox.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Party;
 using System.Reflection;
+using ModLib;
 
 namespace Warlord
 {
@@ -62,10 +63,38 @@ namespace Warlord
             }
         }
 
+        public override void OnGameLoaded(Game game, object initializerObject)
+        {
+            try
+            {
+                RenownGainedEventListener renownGainedEventListener = new RenownGainedEventListener();
+                CampaignEvents.RenownGained.AddNonSerializedListener(renownGainedEventListener, new Action<Hero, int, bool>(renownGainedEventListener.RenownGainedListener));
+                CampaignEvents.TournamentFinished.AddNonSerializedListener(renownGainedEventListener, new Action<CharacterObject, MBReadOnlyList<CharacterObject>, Town, ItemObject>(renownGainedEventListener.PleaseTheCrowd));
+            }
+            catch (Exception ex)
+            {
+                InformationManager.DisplayMessage(new InformationMessage("An error has occurred during OnGameLoaded for BattleBuddies: " + ex.Message.ToString(), Color.FromUint(4282569842U)));
+            }
+        }
+        
+        protected override void OnGameStart(Game game, IGameStarter starterObject)
+        {
+            base.OnGameStart(game, starterObject);
+        }
+
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
-            MessageManager.DisplayMessage("Loaded Warlord 0.1.3",Colors.Green);
-            //this.ThrowWarningIfGameErrorDoesntMatchModVersion();
+            try
+            {
+                MessageManager.DisplayMessage("Loaded Warlord 0.2.0", Colors.Green);
+                //ModLib.FileDatabase.Initialise("Warlord");
+                new WarlordModuleSettings();
+                //this.ThrowWarningIfGameErrorDoesntMatchModVersion();
+            }
+            catch (Exception ex)
+            {
+                MessageManager.DisplayMessage("Could not Initialise ModLib for Warlord: " + ex.Message.ToString(),ModuleColors.uiColorWarning);
+            }            
         }
     }
 }
