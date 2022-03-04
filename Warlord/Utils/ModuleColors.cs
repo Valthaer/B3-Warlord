@@ -19,6 +19,8 @@ namespace Warlord
 
 		public static readonly Color uiHighlightColor = Color.ConvertStringToColor("#e89300ff");
 
-		public static readonly Color uiStandardTextColor = Colors.Cyan;	
+		public static readonly Color uiStandardTextColor = Colors.Cyan;
+
+		public static readonly Color uiNormalPriorityEvent = Colors.White;
 	}
 }

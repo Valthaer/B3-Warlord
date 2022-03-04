@@ -46,16 +46,17 @@ namespace Warlord
 		public bool LordPartySpawnSizeReducedEnabled { get; set; } = true;
 
 		[XmlElement]
-		[SettingProperty("Battle Relationship Increase", 1, 5, "The maximum base value that your relationship will increase from battles")]
-		public int BattleRelationshipIncrease { get; set; } = 1;
+		[SettingProperty("Relation by Events Enabled", "If Enabled, will improve relations to nearby characters by succesful events.")]
+		public bool RelationByEventsEnabled { get; set; } = true;
 
+#if DEBUG
 		[XmlElement]
-		[SettingProperty("Tournament Relationship Increase", 1, 5, "The base value that your relationship will increase from tournaments")]
-		public int TournamentRelationshipIncrease { get; set; } = 1;
-
-		[XmlElement]
-		[SettingProperty("Radius", 10, 500, "This is the size of the radius inside which villages and towns will be affected by the relationship increase.")]
-		public int Radius { get; set; } = 10;
+		[SettingProperty("Debug Messages Enabled", "If Enabled, will show debug messages.")]
+		public bool DebugMessagesEnabled { get; set; } = false;
+#endif
+		//[XmlElement]
+		//[SettingProperty(" X Increase", 1, 5, "The base value that your X will increase from Y")]
+		//public int XIValueIncrease { get; set; } = 1;
 
 		public const string InstanceID = "WarlordModuleSettings";
 	}

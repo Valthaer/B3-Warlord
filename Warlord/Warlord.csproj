@@ -144,8 +144,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Features\RenownGainedEventListener.cs" />
+    <Compile Include="Features\RelationshipEvents.cs" />
+    <Compile Include="Features\RelationshipHelper.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="ResourceManager.cs" />
     <Compile Include="WarlordModuleSettings.cs" />
     <Compile Include="Utils\MessageManager.cs" />
     <Compile Include="Utils\ModuleColors.cs" />

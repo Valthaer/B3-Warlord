@@ -67,19 +67,14 @@ namespace Warlord
         {
             try
             {
-                RenownGainedEventListener renownGainedEventListener = new RenownGainedEventListener();
-                CampaignEvents.RenownGained.AddNonSerializedListener(renownGainedEventListener, new Action<Hero, int, bool>(renownGainedEventListener.RenownGainedListener));
-                CampaignEvents.TournamentFinished.AddNonSerializedListener(renownGainedEventListener, new Action<CharacterObject, MBReadOnlyList<CharacterObject>, Town, ItemObject>(renownGainedEventListener.PleaseTheCrowd));
+                RelationShipListeners relationShipListeners = new RelationShipListeners();
+                CampaignEvents.OnPlayerBattleEndEvent.AddNonSerializedListener(relationShipListeners, new Action<MapEvent>(relationShipListeners.OnBattleEndEvent));
+                CampaignEvents.TournamentFinished.AddNonSerializedListener(relationShipListeners, new Action<CharacterObject, MBReadOnlyList<CharacterObject>, Town, ItemObject>(relationShipListeners.PleaseTheCrowd));
             }
             catch (Exception ex)
             {
-                InformationManager.DisplayMessage(new InformationMessage("An error has occurred during OnGameLoaded for BattleBuddies: " + ex.Message.ToString(), Color.FromUint(4282569842U)));
+                InformationManager.DisplayMessage(new InformationMessage("An error has occurred during OnGameLoaded for Battle Buddies: " + ex.Message.ToString(), Color.FromUint(4282569842U)));
             }
-        }
-        
-        protected override void OnGameStart(Game game, IGameStarter starterObject)
-        {
-            base.OnGameStart(game, starterObject);
         }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()

@@ -41,8 +41,11 @@ namespace Warlord
             InformationManager.AddQuickInformation(textObj, announcerCharacter: character);
         }
         internal static void DisplayDebugMessage(string msg)
-        {            
-            InformationManager.DisplayMessage(new InformationMessage("[Warlord DEBUG] " + msg, Colors.Red));
+        {
+            if (WarlordModuleSettings.Instance.DebugMessagesEnabled)
+            {
+                InformationManager.DisplayMessage(new InformationMessage("[Warlord DEBUG] " + msg, Colors.Red));
+            }                
         }
     }
 }

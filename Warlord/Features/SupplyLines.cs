@@ -333,9 +333,7 @@ namespace Warlord
                                         }
                                     }
 
-#if DEBUG
-                                    //MessageManager.DisplayDebugMessage("Reset troop roster for " + m.Name.ToString() + ".");
-#endif
+                                    MessageManager.DisplayDebugMessage("Reset troop roster for " + m.Name.ToString() + ".");
                                 }
                             }
 
